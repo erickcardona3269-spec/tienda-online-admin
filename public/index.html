@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tienda Online - Catálogo de Productos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">🛍️ Tienda Online</div>
+      <ul class="nav-links">
+        <li><a href="index.html" class="active">Catálogo</a></li>
+        <li><a href="admin.html">Administración</a></li>
+        <li><a href="#estadisticas">Estadísticas</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="hero">
+      <h1>Bienvenido a Nuestra Tienda</h1>
+      <p>Explora nuestro catálogo de productos disponibles</p>
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Buscar productos...">
+        <button onclick="buscarProductos()">🔍 Buscar</button>
+      </div>
+    </section>
+
+    <section class="stats" id="estadisticas">
+      <div class="stat-card">
+        <h3>Productos Totales</h3>
+        <p id="totalProductos">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Cantidad en Stock</h3>
+        <p id="cantidadTotal">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Precio Promedio</h3>
+        <p id="precioPromedio">$0.00</p>
+      </div>
+    </section>
+
+    <section class="productos">
+      <h2>Catálogo de Productos</h2>
+      <div id="productosList" class="productos-grid">
+        <div class="loading">Cargando productos...</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2026 Tienda Online. Todos los derechos reservados.</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

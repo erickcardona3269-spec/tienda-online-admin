@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración - Tienda Online</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="admin-page">
+  <nav class="navbar">
+    <div class="nav-container">
+      <div class="logo">🛍️ Tienda Online - ADMIN</div>
+      <ul class="nav-links">
+        <li><a href="index.html">Catálogo</a></li>
+        <li><a href="admin.html" class="active">Administración</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="admin-container">
+    <aside class="sidebar">
+      <div class="menu">
+        <div class="menu-item active" onclick="mostrarSeccion('productos')">
+          📦 Productos
+        </div>
+        <div class="menu-item" onclick="mostrarSeccion('agregar')">
+          ➕ Agregar Producto
+        </div>
+        <div class="menu-item" onclick="mostrarSeccion('estadisticas')">
+          📊 Estadísticas
+        </div>
+      </div>
+    </aside>
+
+    <div class="admin-content">
+      <!-- SECCIÓN: PRODUCTOS -->
+      <section id="productos" class="seccion activa">
+        <div class="section-header">
+          <h2>Gestión de Productos</h2>
+          <div class="search-box">
+            <input type="text" id="adminSearchInput" placeholder="Buscar producto...">
+            <button onclick="buscarProductosAdmin()">🔍 Buscar</button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="tabla-productos">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Categoría</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="tablaProductos">
+              <tr>
+                <td colspan="7" style="text-align: center; padding: 20px;">
+                  <div class="loading">Cargando productos...</div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- SECCIÓN: AGREGAR/EDITAR PRODUCTO -->
+      <section id="agregar" class="seccion">
+        <div class="section-header">
+          <h2 id="formTitulo">Agregar Nuevo Producto</h2>
+        </div>
+
+        <form id="formProducto" class="form-producto">
+          <div class="form-group">
+            <label for="nombre">Nombre del Producto *</label>
+            <input type="text" id="nombre" required placeholder="Ej: Laptop Dell">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="precio">Precio ($) *</label>
+              <input type="number" id="precio" required step="0.01" placeholder="999.99">
+            </div>
+            <div class="form-group">
+              <label for="cantidad">Cantidad en Stock</label>
+              <input type="number" id="cantidad" value="0" step="1">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="categoria">Categoría</label>
+              <select id="categoria">
+                <option value="">Seleccionar categoría</option>
+                <option value="Electrónica">Electrónica</option>
+                <option value="Ropa">Ropa</option>
+                <option value="Libros">Libros</option>
+                <option value="Hogar">Hogar</option>
+                <option value="Deportes">Deportes</option>
+                <option value="Otro">Otro</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="imagen">URL de Imagen</label>
+              <input type="url" id="imagen" placeholder="https://ejemplo.com/imagen.jpg">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="descripcion">Descripción</label>
+            <textarea id="descripcion" rows="4" placeholder="Describe el producto..."></textarea>
+          </div>
+
+          <div class="form-actions">
+            <button type="submit" class="btn-primary">💾 Guardar Producto</button>
+            <button type="button" class="btn-secondary" onclick="limpiarFormulario()">🔄 Limpiar</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- SECCIÓN: ESTADÍSTICAS -->
+      <section id="estadisticas" class="seccion">
+        <div class="section-header">
+          <h2>Estadísticas</h2>
+        </div>
+
+        <div class="stats-grid">
+          <div class="stat-card-admin">
+            <h3>Total de Productos</h3>
+            <p id="statTotal" class="stat-number">0</p>
+          </div>
+          <div class="stat-card-admin">
+            <h3>Stock Total</h3>
+            <p id="statStock" class="stat-number">0</p>
+          </div>
+          <div class="stat-card-admin">
+            <h3>Precio Promedio</h3>
+            <p id="statPromedio" class="stat-number">$0.00</p>
+          </div>
+          <div class="stat-card-admin">
+            <h3>Precio Mínimo</h3>
+            <p id="statMinimo" class="stat-number">$0.00</p>
+          </div>
+          <div class="stat-card-admin">
+            <h3>Precio Máximo</h3>
+            <p id="statMaximo" class="stat-number">$0.00</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- Modal para editar -->
+  <div id="modalEditar" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Editar Producto</h2>
+      <form id="formEditar" class="form-producto">
+        <input type="hidden" id="editarId">
+        
+        <div class="form-group">
+          <label for="editarNombre">Nombre del Producto *</label>
+          <input type="text" id="editarNombre" required>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editarPrecio">Precio ($) *</label>
+            <input type="number" id="editarPrecio" required step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="editarCantidad">Cantidad en Stock</label>
+            <input type="number" id="editarCantidad" step="1">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="editarCategoria">Categoría</label>
+            <select id="editarCategoria">
+              <option value="">Seleccionar categoría</option>
+              <option value="Electrónica">Electrónica</option>
+              <option value="Ropa">Ropa</option>
+              <option value="Libros">Libros</option>
+              <option value="Hogar">Hogar</option>
+              <option value="Deportes">Deportes</option>
+              <option value="Otro">Otro</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="editarImagen">URL de Imagen</label>
+            <input type="url" id="editarImagen">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="editarDescripcion">Descripción</label>
+          <textarea id="editarDescripcion" rows="4"></textarea>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">💾 Actualizar</button>
+          <button type="button" class="btn-secondary" onclick="cerrarModal()">❌ Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Tienda Online - Panel de Administración</p>
+  </footer>
+
+  <script src="admin.js"></script>
+</body>
+</html>
